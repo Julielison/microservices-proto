@@ -2,13 +2,13 @@
 
 Repositório de definições de contratos e geração de stubs para os microsserviços do projeto de comércio eletrônico, utilizando **Protocol Buffers (protobuf)** e **gRPC**.
 
-> **Parte 2:** adicionado o contrato `payment.proto`, utilizado pelo microsserviço **Order** para solicitar a cobrança de um pedido ao microsserviço **Payment**.
+> **Parte Final:** adicionado o contrato `shipping.proto`, utilizado pelo microsserviço **Order** para solicitar o agendamento de envio de um pedido ao microsserviço **Shipping**.
 
 ---
 
 ## Visão Geral
 
-Este repositório centraliza os arquivos `.proto` que definem as mensagens e serviços trocados entre os microsserviços. A partir dessas definições, são gerados automaticamente os **client e server stubs** para Go (e potencialmente outras linguagens), eliminando a necessidade de escrever manualmente o código de serialização/desserialização das mensagens.
+Este repositório centraliza os arquivos `.proto` que definem as mensagens e serviços trocados entre os microsserviços. A partir dessas definições, são gerados automaticamente os **client e server stubs** para Go, eliminando a necessidade de escrever manualmente o código de serialização/desserialização das mensagens.
 
 ---
 
@@ -17,105 +17,93 @@ Este repositório centraliza os arquivos `.proto` que definem as mensagens e ser
 ```
 microservices-proto/
 ├── order/
-│   └── order.proto             # Definição de mensagens e serviço Order em protobuf
+│   └── order.proto              # Mensagens e serviço Order
 ├── payment/
-│   └── payment.proto           # Definição de mensagens e serviço Payment em protobuf
+│   └── payment.proto            # Mensagens e serviço Payment
+├── shipping/
+│   └── shipping.proto           # (Parte Final) Mensagens e serviço Shipping
 ├── golang/
 │   ├── order/
-│   │   ├── go.mod              # Módulo Go do pacote gerado para Order
+│   │   ├── go.mod
 │   │   ├── go.sum
-│   │   ├── order.pb.go         # Código Go gerado: structs das mensagens protobuf
-│   │   └── order_grpc.pb.go    # Código Go gerado: interfaces e stubs gRPC
-│   └── payment/
-│       ├── go.mod              # Módulo Go do pacote gerado para Payment
-│       ├── go.sum
-│       ├── payment.pb.go       # Código Go gerado: structs das mensagens protobuf
-│       └── payment_grpc.pb.go  # Código Go gerado: interfaces e stubs gRPC
-└── run.sh                      # Script para (re)gerar os stubs de todos os serviços
+│   │   ├── order.pb.go
+│   │   └── order_grpc.pb.go
+│   ├── payment/
+│   │   ├── go.mod
+│   │   ├── go.sum
+│   │   ├── payment.pb.go
+│   │   └── payment_grpc.pb.go
+│   └── shipping/                # (Parte Final)
+│       ├── go.mod
+│       ├── shipping.pb.go
+│       └── shipping_grpc.pb.go
+└── run.sh                       # Script para (re)gerar os stubs de todos os serviços
 ```
-
-### Detalhamento dos arquivos
-
-| Arquivo | Descrição |
-|---|---|
-| `order/order.proto` | Contrato protobuf: define mensagens (`CreateOrderRequest`, `OrderItem`, `CreateOrderResponse`) e o serviço `Order` com o método `Create` |
-| `payment/payment.proto` | **(Parte 2)** Contrato protobuf: define mensagens (`CreatePaymentRequest`, `CreatePaymentResponse`) e o serviço `Payment` com o método `Create` |
-| `golang/order/order.pb.go` | Gerado automaticamente: structs Go correspondentes às mensagens protobuf de Order, com métodos de serialização/desserialização |
-| `golang/order/order_grpc.pb.go` | Gerado automaticamente: interface do servidor (`OrderServer`), cliente (`OrderClient`) e o tipo `UnimplementedOrderServer` para embedding |
-| `golang/payment/payment.pb.go` | **(Parte 2)** Gerado automaticamente: structs Go correspondentes às mensagens protobuf de Payment |
-| `golang/payment/payment_grpc.pb.go` | **(Parte 2)** Gerado automaticamente: interface do servidor (`PaymentServer`), cliente (`PaymentClient`) e o tipo `UnimplementedPaymentServer` para embedding |
-| `golang/order/go.mod`, `golang/payment/go.mod` | Módulos Go com as dependências `google.golang.org/grpc` e `google.golang.org/protobuf` |
-| `run.sh` | Script que invoca o `protoc` (com os plugins `protoc-gen-go` e `protoc-gen-go-grpc`) para gerar os stubs de Order e de Payment |
 
 ---
 
-## Como funciona o protobuf
+## Contratos protobuf
 
-O **Protocol Buffer** (protobuf) é um mecanismo de serialização binária desenvolvido pelo Google. No contexto do gRPC:
-
-1. **Você escreve** um arquivo `.proto` declarando mensagens e serviços
-2. **O compilador `protoc`** gera código na linguagem alvo (Go, Python, Java etc.)
-3. **O código gerado** implementa automaticamente a codificação/decodificação das mensagens para transmissão em rede
-4. **Os desenvolvedores** precisam apenas implementar a lógica de negócio, sem se preocupar com serialização
-
-### Exemplo: order.proto
+### order.proto
 
 ```protobuf
 syntax = "proto3";
-
-// Mensagem de entrada: dados do pedido
 message CreateOrderRequest {
-  int32 costumer_id = 1;          // ID do cliente
-  repeated OrderItem order_items = 2; // Lista de itens (repeated = array)
-  float total_price = 3;          // Preço total
+  int32 costumer_id = 1;
+  repeated OrderItem order_items = 2;
+  float total_price = 3;
 }
-
-// Item individual do pedido
 message OrderItem {
   string product_code = 1;
   float unit_price = 2;
   int32 quantity = 3;
 }
-
-// Mensagem de retorno: ID do pedido criado
-message CreateOrderResponse {
-  int32 order_id = 1;
-}
-
-// Serviço com um método RPC
+message CreateOrderResponse { int32 order_id = 1; }
 service Order {
   rpc Create(CreateOrderRequest) returns (CreateOrderResponse) {}
 }
 ```
 
-### Exemplo: payment.proto (Parte 2)
+### payment.proto
 
 ```protobuf
 syntax = "proto3";
-option go_package="github/ruandg/microservices-proto/golang/payment";
-
-// Mensagem de entrada: dados da cobrança
 message CreatePaymentRequest {
-  int64 user_id = 1;      // ID do cliente a ser cobrado
-  int64 order_id = 2;     // ID do pedido associado à cobrança
-  float total_price = 3;  // Valor total a ser cobrado
+  int64 user_id = 1;
+  int64 order_id = 2;
+  float total_price = 3;
 }
-
-// Mensagem de retorno: identificadores gerados pelo Payment
 message CreatePaymentResponse {
   int64 payment_id = 1;
   int64 bill_id = 2;
 }
-
-// Serviço com um método RPC
 service Payment {
   rpc Create(CreatePaymentRequest) returns (CreatePaymentResponse) {}
 }
 ```
 
-O microsserviço **Order** usa este contrato como **cliente**: ao registrar um pedido, ele invoca `Payment.Create` para solicitar a cobrança correspondente.
+### shipping.proto (Parte Final)
 
-Os números após cada campo (`= 1`, `= 2`, `= 3`) são **identificadores de campo** na mensagem binária serializada — não são valores padrão.
+```protobuf
+syntax = "proto3";
+message ShippingItem {
+  string product_code = 1;
+  int32  quantity     = 2;
+}
+message CreateShippingRequest {
+  int64                order_id       = 1;
+  repeated ShippingItem shipping_items = 2;
+}
+message CreateShippingResponse {
+  int64 shipping_id        = 1;
+  int32 delivery_deadline  = 2;   // prazo em dias
+}
+service Shipping {
+  rpc Create(CreateShippingRequest) returns (CreateShippingResponse) {}
+}
+```
+
+O microsserviço **Order** usa este contrato como **cliente**: após confirmar o pagamento, invoca `Shipping.Create` para agendar o envio e receber o prazo de entrega.
 
 ---
 
@@ -124,49 +112,19 @@ Os números após cada campo (`= 1`, `= 2`, `= 3`) são **identificadores de cam
 ### Pré-requisitos
 
 ```bash
-# Instalar o compilador protobuf
 apt-get install -y protobuf-compiler
-
-# Instalar os plugins Go
-apt-get install -y protoc-gen-go protoc-gen-go-grpc
-# ou via go install (requer acesso a proxy.golang.org):
 go install google.golang.org/protobuf/cmd/protoc-gen-go@latest
 go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@latest
 ```
 
-### Gerando com o script `run.sh`
-
-A forma mais simples de (re)gerar os stubs de **todos** os serviços é executar o script disponibilizado na raiz do repositório:
+### Gerando todos os stubs
 
 ```bash
+chmod +x run.sh
 ./run.sh
 ```
 
-Ele executa, para cada serviço, o comando `protoc` equivalente ao mostrado abaixo.
-
-### Comando de geração manual
-
-```bash
-# Order — na raiz do microservices-proto
-protoc \
-  --go_out=golang/order \
-  --go_opt=paths=source_relative \
-  --go-grpc_out=golang/order \
-  --go-grpc_opt=paths=source_relative \
-  -I order \
-  order/order.proto
-
-# Payment — na raiz do microservices-proto (Parte 2)
-protoc \
-  --go_out=golang/payment \
-  --go_opt=paths=source_relative \
-  --go-grpc_out=golang/payment \
-  --go-grpc_opt=paths=source_relative \
-  -I payment \
-  payment/payment.proto
-```
-
-Isso gera, para cada serviço, dois arquivos em `golang/<serviço>/`:
+O script gera, para cada serviço, dois arquivos em `golang/<serviço>/`:
 - `<serviço>.pb.go` — structs das mensagens
 - `<serviço>_grpc.pb.go` — interfaces e stubs do serviço gRPC
 
@@ -174,19 +132,19 @@ Isso gera, para cada serviço, dois arquivos em `golang/<serviço>/`:
 
 ## Como os microsserviços usam este repositório
 
-O repositório `microservices` referencia os módulos gerados aqui via `replace` directive no `go.mod` de cada serviço. No `go.mod` do microsserviço **Order**, por exemplo:
+Via `replace` directive no `go.mod` de cada serviço:
 
 ```go
+// go.mod do microsserviço Order
 require (
-	github.com/ruandg/microservices-proto/golang/order   v0.0.0-00010101000000-000000000000
-	github.com/ruandg/microservices-proto/golang/payment v0.0.0-00010101000000-000000000000
+    github.com/ruandg/microservices-proto/golang/order    v0.0.0-00010101000000-000000000000
+    github.com/ruandg/microservices-proto/golang/payment  v0.0.0-00010101000000-000000000000
+    github.com/ruandg/microservices-proto/golang/shipping v0.0.0-00010101000000-000000000000
 )
-
-replace github.com/ruandg/microservices-proto/golang/order => ../../microservices-proto/golang/order
-replace github.com/ruandg/microservices-proto/golang/payment => ../../microservices-proto/golang/payment
+replace github.com/ruandg/microservices-proto/golang/order    => ../../microservices-proto/golang/order
+replace github.com/ruandg/microservices-proto/golang/payment  => ../../microservices-proto/golang/payment
+replace github.com/ruandg/microservices-proto/golang/shipping => ../../microservices-proto/golang/shipping
 ```
-
-Isso permite que o código dos adapters gRPC use os tipos gerados (`order.CreateOrderRequest`, `payment.CreatePaymentRequest`, `payment.PaymentClient` etc.) sem precisar publicar os módulos em um registry.
 
 ---
 

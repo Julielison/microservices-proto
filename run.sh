@@ -3,7 +3,7 @@
 # Pré-requisitos: protoc, protoc-gen-go e protoc-gen-go-grpc disponíveis no PATH.
 #
 # Uso:
-#   ./run.sh           # gera os stubs de todos os microsserviços (order e payment)
+#   ./run.sh           # gera os stubs de todos os microsserviços (order, payment e shipping)
 
 set -e
 
@@ -24,5 +24,14 @@ protoc \
   --go-grpc_opt=paths=source_relative \
   -I payment \
   payment/payment.proto
+
+echo "Gerando stubs para shipping..."
+protoc \
+  --go_out=golang/shipping \
+  --go_opt=paths=source_relative \
+  --go-grpc_out=golang/shipping \
+  --go-grpc_opt=paths=source_relative \
+  -I shipping \
+  shipping/shipping.proto
 
 echo "Stubs gerados com sucesso."
