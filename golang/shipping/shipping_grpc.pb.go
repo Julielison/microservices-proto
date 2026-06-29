@@ -13,6 +13,9 @@ import (
 	status "google.golang.org/grpc/status"
 )
 
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the grpc package it is being compiled against.
+// Requires gRPC-Go v1.64.0 or later.
 const _ = grpc.SupportPackageIsVersion9
 
 const (
@@ -20,6 +23,8 @@ const (
 )
 
 // ShippingClient is the client API for Shipping service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ShippingClient interface {
 	Create(ctx context.Context, in *CreateShippingRequest, opts ...grpc.CallOption) (*CreateShippingResponse, error)
 }
@@ -43,13 +48,18 @@ func (c *shippingClient) Create(ctx context.Context, in *CreateShippingRequest, 
 }
 
 // ShippingServer is the server API for Shipping service.
-// All implementations must embed UnimplementedShippingServer for forward compatibility.
+// All implementations must embed UnimplementedShippingServer
+// for forward compatibility.
 type ShippingServer interface {
 	Create(context.Context, *CreateShippingRequest) (*CreateShippingResponse, error)
 	mustEmbedUnimplementedShippingServer()
 }
 
-// UnimplementedShippingServer must be embedded to have forward compatible implementations.
+// UnimplementedShippingServer must be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
 type UnimplementedShippingServer struct{}
 
 func (UnimplementedShippingServer) Create(context.Context, *CreateShippingRequest) (*CreateShippingResponse, error) {
@@ -59,11 +69,17 @@ func (UnimplementedShippingServer) mustEmbedUnimplementedShippingServer() {}
 func (UnimplementedShippingServer) testEmbeddedByValue()                  {}
 
 // UnsafeShippingServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ShippingServer will
+// result in compilation errors.
 type UnsafeShippingServer interface {
 	mustEmbedUnimplementedShippingServer()
 }
 
 func RegisterShippingServer(s grpc.ServiceRegistrar, srv ShippingServer) {
+	// If the following call panics, it indicates UnimplementedShippingServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
 	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
 		t.testEmbeddedByValue()
 	}
@@ -88,6 +104,9 @@ func _Shipping_Create_Handler(srv interface{}, ctx context.Context, dec func(int
 	return interceptor(ctx, in, info, handler)
 }
 
+// Shipping_ServiceDesc is the grpc.ServiceDesc for Shipping service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
 var Shipping_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "Shipping",
 	HandlerType: (*ShippingServer)(nil),

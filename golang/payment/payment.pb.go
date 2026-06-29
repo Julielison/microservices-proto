@@ -148,7 +148,7 @@ const file_payment_proto_rawDesc = "" +
 	"payment_id\x18\x01 \x01(\x03R\tpaymentId\x12\x17\n" +
 	"\abill_id\x18\x02 \x01(\x03R\x06billId2D\n" +
 	"\aPayment\x129\n" +
-	"\x06Create\x12\x15.CreatePaymentRequest\x1a\x16.CreatePaymentResponse\"\x00B2Z0github/ruandg/microservices-proto/golang/paymentb\x06proto3"
+	"\x06Create\x12\x15.CreatePaymentRequest\x1a\x16.CreatePaymentResponse\"\x00B:Z8github.com/Julielison/microservices-proto/golang/paymentb\x06proto3"
 
 var (
 	file_payment_proto_rawDescOnce sync.Once

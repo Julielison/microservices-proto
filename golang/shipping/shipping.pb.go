@@ -15,7 +15,9 @@ import (
 )
 
 const (
+	// Verify that this generated code is sufficiently up-to-date.
 	_ = protoimpl.EnforceVersion(20 - protoimpl.MinVersion)
+	// Verify that runtime/protoimpl is sufficiently up-to-date.
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
@@ -34,8 +36,11 @@ func (x *ShippingItem) Reset() {
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *ShippingItem) String() string { return protoimpl.X.MessageStringOf(x) }
-func (*ShippingItem) ProtoMessage()    {}
+func (x *ShippingItem) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ShippingItem) ProtoMessage() {}
 
 func (x *ShippingItem) ProtoReflect() protoreflect.Message {
 	mi := &file_shipping_proto_msgTypes[0]
@@ -49,13 +54,18 @@ func (x *ShippingItem) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-func (*ShippingItem) Descriptor() ([]byte, []int) { return file_shipping_proto_rawDescGZIP(), []int{0} }
+// Deprecated: Use ShippingItem.ProtoReflect.Descriptor instead.
+func (*ShippingItem) Descriptor() ([]byte, []int) {
+	return file_shipping_proto_rawDescGZIP(), []int{0}
+}
+
 func (x *ShippingItem) GetProductCode() string {
 	if x != nil {
 		return x.ProductCode
 	}
 	return ""
 }
+
 func (x *ShippingItem) GetQuantity() int32 {
 	if x != nil {
 		return x.Quantity
@@ -78,8 +88,11 @@ func (x *CreateShippingRequest) Reset() {
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CreateShippingRequest) String() string { return protoimpl.X.MessageStringOf(x) }
-func (*CreateShippingRequest) ProtoMessage()    {}
+func (x *CreateShippingRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateShippingRequest) ProtoMessage() {}
 
 func (x *CreateShippingRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_shipping_proto_msgTypes[1]
@@ -93,15 +106,18 @@ func (x *CreateShippingRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
+// Deprecated: Use CreateShippingRequest.ProtoReflect.Descriptor instead.
 func (*CreateShippingRequest) Descriptor() ([]byte, []int) {
 	return file_shipping_proto_rawDescGZIP(), []int{1}
 }
+
 func (x *CreateShippingRequest) GetOrderId() int64 {
 	if x != nil {
 		return x.OrderId
 	}
 	return 0
 }
+
 func (x *CreateShippingRequest) GetShippingItems() []*ShippingItem {
 	if x != nil {
 		return x.ShippingItems
@@ -112,7 +128,7 @@ func (x *CreateShippingRequest) GetShippingItems() []*ShippingItem {
 type CreateShippingResponse struct {
 	state            protoimpl.MessageState `protogen:"open.v1"`
 	ShippingId       int64                  `protobuf:"varint,1,opt,name=shipping_id,json=shippingId,proto3" json:"shipping_id,omitempty"`
-	DeliveryDeadline int32                  `protobuf:"varint,2,opt,name=delivery_deadline,json=deliveryDeadline,proto3" json:"delivery_deadline,omitempty"`
+	DeliveryDeadline int32                  `protobuf:"varint,2,opt,name=delivery_deadline,json=deliveryDeadline,proto3" json:"delivery_deadline,omitempty"` // prazo em dias
 	unknownFields    protoimpl.UnknownFields
 	sizeCache        protoimpl.SizeCache
 }
@@ -124,8 +140,11 @@ func (x *CreateShippingResponse) Reset() {
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *CreateShippingResponse) String() string { return protoimpl.X.MessageStringOf(x) }
-func (*CreateShippingResponse) ProtoMessage()    {}
+func (x *CreateShippingResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreateShippingResponse) ProtoMessage() {}
 
 func (x *CreateShippingResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_shipping_proto_msgTypes[2]
@@ -139,15 +158,18 @@ func (x *CreateShippingResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
+// Deprecated: Use CreateShippingResponse.ProtoReflect.Descriptor instead.
 func (*CreateShippingResponse) Descriptor() ([]byte, []int) {
 	return file_shipping_proto_rawDescGZIP(), []int{2}
 }
+
 func (x *CreateShippingResponse) GetShippingId() int64 {
 	if x != nil {
 		return x.ShippingId
 	}
 	return 0
 }
+
 func (x *CreateShippingResponse) GetDeliveryDeadline() int32 {
 	if x != nil {
 		return x.DeliveryDeadline
@@ -159,19 +181,19 @@ var File_shipping_proto protoreflect.FileDescriptor
 
 const file_shipping_proto_rawDesc = "" +
 	"\n" +
-	"\rshipping.proto\"J\n" +
+	"\x0eshipping.proto\"M\n" +
 	"\fShippingItem\x12!\n" +
 	"\fproduct_code\x18\x01 \x01(\tR\vproductCode\x12\x1a\n" +
-	"\bquantity\x18\x02 \x01(\x05R\bquantity\"g\n" +
+	"\bquantity\x18\x02 \x01(\x05R\bquantity\"h\n" +
 	"\x15CreateShippingRequest\x12\x19\n" +
-	"\border_id\x18\x01 \x01(\x03R\aorderId\x12\x33\n" +
-	"\x0eshipping_items\x18\x02 \x03(\v2\r.ShippingItemR\rshippingItems\"p\n" +
+	"\border_id\x18\x01 \x01(\x03R\aorderId\x124\n" +
+	"\x0eshipping_items\x18\x02 \x03(\v2\r.ShippingItemR\rshippingItems\"f\n" +
 	"\x16CreateShippingResponse\x12\x1f\n" +
 	"\vshipping_id\x18\x01 \x01(\x03R\n" +
 	"shippingId\x12+\n" +
 	"\x11delivery_deadline\x18\x02 \x01(\x05R\x10deliveryDeadline2G\n" +
 	"\bShipping\x12;\n" +
-	"\x06Create\x12\x16.CreateShippingRequest\x1a\x17.CreateShippingResponse\"\x00B2Z0github/ruandg/microservices-proto/golang/shippingb\x06proto3"
+	"\x06Create\x12\x16.CreateShippingRequest\x1a\x17.CreateShippingResponse\"\x00B;Z9github.com/Julielison/microservices-proto/golang/shippingb\x06proto3"
 
 var (
 	file_shipping_proto_rawDescOnce sync.Once

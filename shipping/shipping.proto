@@ -1,5 +1,5 @@
 syntax = "proto3";
-option go_package="github/ruandg/microservices-proto/golang/shipping";
+option go_package="github.com/Julielison/microservices-proto/golang/shipping";
 
 message ShippingItem {
   string product_code = 1;

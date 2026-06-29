@@ -206,7 +206,7 @@ const file_order_proto_rawDesc = "" +
 	"\x13CreateOrderResponse\x12\x19\n" +
 	"\border_id\x18\x01 \x01(\x05R\aorderId2>\n" +
 	"\x05Order\x125\n" +
-	"\x06Create\x12\x13.CreateOrderRequest\x1a\x14.CreateOrderResponse\"\x00B0Z.github/ruandg/microservices-proto/golang/orderb\x06proto3"
+	"\x06Create\x12\x13.CreateOrderRequest\x1a\x14.CreateOrderResponse\"\x00B8Z6github.com/Julielison/microservices-proto/golang/orderb\x06proto3"
 
 var (
 	file_order_proto_rawDescOnce sync.Once

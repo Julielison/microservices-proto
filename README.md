@@ -132,20 +132,26 @@ O script gera, para cada serviço, dois arquivos em `golang/<serviço>/`:
 
 ## Como os microsserviços usam este repositório
 
-Via `replace` directive no `go.mod` de cada serviço:
+Os microsserviços utilizam este repositório baixando os pacotes gerados remotamente do GitHub através do comando `go get`.
 
-```go
-// go.mod do microsserviço Order
-require (
-    github.com/ruandg/microservices-proto/golang/order    v0.0.0-00010101000000-000000000000
-    github.com/ruandg/microservices-proto/golang/payment  v0.0.0-00010101000000-000000000000
-    github.com/ruandg/microservices-proto/golang/shipping v0.0.0-00010101000000-000000000000
-)
-replace github.com/ruandg/microservices-proto/golang/order    => ../../microservices-proto/golang/order
-replace github.com/ruandg/microservices-proto/golang/payment  => ../../microservices-proto/golang/payment
-replace github.com/ruandg/microservices-proto/golang/shipping => ../../microservices-proto/golang/shipping
+Por exemplo, no microsserviço **Order**, você adiciona as dependências executando:
+
+```bash
+go get github.com/Julielison/microservices-proto/golang/order@latest
+go get github.com/Julielison/microservices-proto/golang/payment@latest
+go get github.com/Julielison/microservices-proto/golang/shipping@latest
 ```
 
+Isso garantirá que o `go.mod` contenha as versões remotas mais atualizadas (sem necessidade da diretiva `replace` local).
+
+```go
+// go.mod do microsserviço Order (Exemplo de como ficará)
+require (
+    github.com/Julielison/microservices-proto/golang/order v1.x.x
+    github.com/Julielison/microservices-proto/golang/payment v1.x.x
+    github.com/Julielison/microservices-proto/golang/shipping v1.x.x
+)
+```
 ---
 
 ## Tecnologias
